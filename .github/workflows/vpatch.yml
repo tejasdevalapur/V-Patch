@@ -1,0 +1,59 @@
+name: V-Patch
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '0 3 * * 1'   # weekly auto-fix run
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  # 1) Gate: every PR / push is scanned; findings land in the Security tab and can block the merge.
+  gate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - id: scan
+        run: npx vpatch -q -f sarif -o vpatch.sarif scan --fail-on high
+        continue-on-error: true
+      - uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with: { sarif_file: vpatch.sarif, category: v-patch }
+      - name: Fail the build on high/critical findings
+        if: steps.scan.outcome == 'failure'
+        run: exit 1
+
+  # 2) Auto-fix: weekly, apply only policy-safe fixes (verified by your build/tests) and open a PR.
+  autofix:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - id: fix
+        run: npx vpatch -f markdown -o vpatch-report.md fix --all-safe
+        continue-on-error: true   # exit 3 = some fixes were rolled back; the PR still carries the good ones
+      - uses: peter-evans/create-pull-request@v7
+        with:
+          branch: vpatch/security-fixes
+          title: 'fix(deps): security patches by V-Patch'
+          commit-message: 'fix(deps): apply verified security patches'
+          body-path: vpatch-report.md
+          add-paths: |
+            package.json
+            package-lock.json

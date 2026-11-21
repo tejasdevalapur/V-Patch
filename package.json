@@ -1,0 +1,54 @@
+{
+  "name": "v-patch",
+  "version": "1.0.0",
+  "description": "Scan dependencies for vulnerabilities and apply verified, reversible fixes. CI/CD friendly.",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "prepublishOnly": "npm run build && npm test"
+  },
+  "keywords": [
+    "security",
+    "vulnerability",
+    "npm audit",
+    "patch",
+    "ci",
+    "sca"
+  ],
+  "author": "",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "@inquirer/checkbox": "^5.3.0",
+    "commander": "^15.1.0",
+    "picocolors": "^1.1.1",
+    "semver": "^7.8.6",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "@types/semver": "^7.8.0",
+    "typescript": "^7.0.2",
+    "vitest": "^5.1.1"
+  },
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "bin": {
+    "vpatch": "dist/cli/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "vpatch.config.example.json"
+  ],
+  "engines": {
+    "node": ">=18.17"
+  }
+}

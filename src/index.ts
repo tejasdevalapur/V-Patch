@@ -1,0 +1,16 @@
+export { VPatch, gate, type VPatchOptions, type Selection } from './vpatch.js';
+export { parseConfig, loadConfig, ConfigSchema, type VPatchConfig, type VPatchConfigInput } from './config.js';
+export { VPatchError, ExitCode, type ErrorCode } from './errors.js';
+export { ConsoleLogger, silentLogger, type Logger } from './logger.js';
+export { render, toSarif, type ReportFormat } from './reporters/index.js';
+export type { AuditProvider, ScanContext } from './scanner/provider.js';
+export { NpmAuditProvider, parseNpmAuditReport } from './scanner/npm-audit.js';
+export { OsvProvider, osvEventsToRange } from './scanner/osv.js';
+export type { PackageManager, RegistryReader, RegistryVersion } from './pm/adapter.js';
+export { NpmPackageManager } from './pm/npm.js';
+export { FixPlanner } from './planner/planner.js';
+export { PatchApplier } from './patcher/applier.js';
+export { ProjectVerifier, type VerificationRunner } from './patcher/verifier.js';
+export { SnapshotStore } from './patcher/snapshot.js';
+export type { Executor } from './exec.js';
+export * from './types.js';

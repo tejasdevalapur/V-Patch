@@ -1,0 +1,32 @@
+{
+  "provider": "npm-audit",
+  "severityThreshold": "low",
+  "failOn": "high",
+  "includeDev": true,
+  "policy": {
+    "autoApplyMaxBump": "minor",
+    "versionStrategy": "minimal",
+    "minReleaseAgeDays": 3,
+    "maxChangedPackages": 40
+  },
+  "ignore": [
+    {
+      "id": "GHSA-xxxx-xxxx-xxxx",
+      "reason": "Vulnerable code path is not reachable; tracked in SEC-1234",
+      "expires": "2027-03-31"
+    }
+  ],
+  "verify": {
+    "baseline": true,
+    "runBuild": true,
+    "runTests": true,
+    "commands": ["npm run smoke"],
+    "rescan": true,
+    "timeoutSeconds": 900
+  },
+  "apply": {
+    "mode": "isolated",
+    "ignoreScripts": false,
+    "snapshotDir": ".vpatch"
+  }
+}
