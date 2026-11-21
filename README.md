@@ -1,6 +1,6 @@
 # V-Patch
 
-Scan the packages installed in a Node.js project for known vulnerabilities, show the **smallest safe fix** for each one, let a human (or your policy) choose which to apply, and **prove the application still works** before keeping any change. Anything that fails verification is rolled back automatically.
+V-Patch scans the packages installed in a Node.js project for known vulnerabilities, show the **smallest safe fix** for each one, let a human (or your policy) choose which to apply, and **prove the application still works** before keeping any change. Anything that fails verification is rolled back automatically.
 
 ```
 scan ──► plan ──► select ──► [ snapshot → apply → verify ] ──► keep │ roll back ──► report
